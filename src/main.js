@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {Table, Column, Cell} from 'fixed-data-table';
 import _ from 'lodash';
 import { browserHistory, Router, Route, Link } from 'react-router'
+import 'whatwg-fetch';
 
 class Part extends React.Component {
     constructor(props){
