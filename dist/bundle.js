@@ -300,6 +300,20 @@
 	        value: function componentDidMount() {
 	            if (_lodash2.default.isUndefined(this.props.params.version)) {
 	                _reactRouter.browserHistory.replace(_lodash2.default.assign(this.props.location, { pathname: "/v5.0.0-alpha4" }));
+	            } else {
+	                this.setState({ version: this.props.params.version });
+
+	                var $this = this;
+	                fetch("docs/" + this.props.params.version + ".json").then(function (response) {
+	                    if (response.status !== 200) {
+	                        $this.setState({ error: { code: response.status } });
+	                        return;
+	                    }
+
+	                    response.json().then(function (data) {
+	                        $this.setState({ docs: data });
+	                    });
+	                });
 	            }
 	        }
 	    }, {
