@@ -391,7 +391,7 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'input-group col-lg-9' },
-	                            _react2.default.createElement('input', { placeholder: 'enter filter', className: 'form-control', onChange: this.onChange.bind(this), value: this.state.q })
+	                            _react2.default.createElement('input', { placeholder: 'type to filter', className: 'form-control', onChange: this.onChange.bind(this), value: this.state.q })
 	                        ),
 	                        _react2.default.createElement(
 	                            'div',

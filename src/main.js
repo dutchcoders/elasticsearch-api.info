@@ -202,7 +202,7 @@ class RootView extends React.Component {
                 <div className="row">
                 <form className="form-inline ">
                     <div className="input-group col-lg-9">
-                          <input placeholder="enter filter" className="form-control" onChange={this.onChange.bind(this)} value={ this.state.q }/>
+                          <input placeholder="type to filter" className="form-control" onChange={this.onChange.bind(this)} value={ this.state.q }/>
                     </div>
                     <div className="input-group col-lg-offset-1 col-lg-2">
                     <Select
