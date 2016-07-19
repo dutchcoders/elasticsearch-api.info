@@ -48,5 +48,6 @@
     "whatwg-fetch": "^1.0.0"
   },
   "dependencies": {
+    "react-select": "^1.0.0-beta14"
   }
 }

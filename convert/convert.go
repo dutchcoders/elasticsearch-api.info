@@ -1,7 +1,10 @@
 package main
 
+// https://github.com/elastic/elasticsearch/tree/master/rest-api-spec/src/main/resources/rest-api-spec
+
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -9,7 +12,11 @@ import (
 func main() {
 	var docs = []interface{}{}
 
-	filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(os.Args[1], func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+
 		if err != nil {
 			return err
 		}
@@ -20,9 +27,17 @@ func main() {
 		}
 
 		var x interface{}
-		json.NewDecoder(r).Decode(&x)
+		err = json.NewDecoder(r).Decode(&x)
+		if err != nil {
+			fmt.Println(path, err.Error())
+			return err
+		}
 
-		docs = append(docs, x)
+		for name, obj := range x.(map[string]interface{}) {
+			obj2 := obj.(map[string]interface{})
+			obj2["name"] = name
+			docs = append(docs, obj2)
+		}
 
 		return err
 	})
@@ -42,5 +57,6 @@ func main() {
 
 			tmpl.Execute(os.Stdout, docs)
 	*/
+	// add version
 	json.NewEncoder(os.Stdout).Encode(docs)
 }
