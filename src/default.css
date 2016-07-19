@@ -534,3 +534,7 @@ form .form-control {
 .form-inline .form-control {
     margin: 0px 0px; /* Add a negative margin to remove it*/
 }
+
+.Select-clear-zone {
+    display: none;
+}
