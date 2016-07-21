@@ -78,6 +78,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var versions = [{ value: 'v2.0.0-beta1', label: '/v2.0.0-beta1' }, { value: 'v2.0.0-beta2', label: '/v2.0.0-beta2' }, { value: 'v2.0.0-rc1', label: '/v2.0.0-rc1' }, { value: 'v2.0.0', label: '/v2.0.0' }, { value: 'v2.0.1', label: '/v2.0.1' }, { value: 'v2.0.2', label: '/v2.0.2' }, { value: 'v2.1.0', label: '/v2.1.0' }, { value: 'v2.1.1', label: '/v2.1.1' }, { value: 'v2.1.2', label: '/v2.1.2' }, { value: 'v2.2.0', label: '/v2.2.0' }, { value: 'v2.2.1', label: '/v2.2.1' }, { value: 'v2.2.2', label: '/v2.2.2' }, { value: 'v2.3.0', label: '/v2.3.0' }, { value: 'v2.3.1', label: '/v2.3.1' }, { value: 'v2.3.2', label: '/v2.3.2' }, { value: 'v2.3.3', label: '/v2.3.3' }, { value: 'v2.3.4', label: '/v2.3.4' }, { value: 'v5.0.0-alpha1', label: '/v5.0.0-alpha1' }, { value: 'v5.0.0-alpha2', label: '/v5.0.0-alpha2' }, { value: 'v5.0.0-alpha3', label: '/v5.0.0-alpha3' }, { value: 'v5.0.0-alpha4', label: '/v5.0.0-alpha4' }];
+
 	var Part = function (_React$Component) {
 	    _inherits(Part, _React$Component);
 
@@ -291,38 +293,21 @@
 	    }
 
 	    _createClass(RootView, [{
-	        key: 'load',
-	        value: function load() {
-	            var $this = this;
-	        }
-	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            if (_lodash2.default.isUndefined(this.props.params.version)) {
 	                _reactRouter.browserHistory.replace(_lodash2.default.assign(this.props.location, { pathname: "/v5.0.0-alpha4" }));
 	            } else {
-	                this.setState({ version: this.props.params.version });
-
-	                var $this = this;
-	                fetch("docs/" + this.props.params.version + ".json").then(function (response) {
-	                    if (response.status !== 200) {
-	                        $this.setState({ error: { code: response.status } });
-	                        return;
-	                    }
-
-	                    response.json().then(function (data) {
-	                        $this.setState({ docs: data });
-	                    });
-	                });
+	                this.load(this.props.params.version);
 	            }
 	        }
 	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            this.setState({ version: nextProps.params.version });
+	        key: 'load',
+	        value: function load(version) {
+	            this.setState({ version: version });
 
 	            var $this = this;
-	            fetch("docs/" + nextProps.params.version + ".json").then(function (response) {
+	            fetch("docs/" + version + ".json").then(function (response) {
 	                if (response.status !== 200) {
 	                    $this.setState({ error: { code: response.status } });
 	                    return;
@@ -332,6 +317,13 @@
 	                    $this.setState({ docs: data });
 	                });
 	            });
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            if (this.props.params.version !== nextProps.params.version) {
+	                this.load(nextProps.params.version);
+	            }
 	        }
 	    }, {
 	        key: 'onVersionChange',
@@ -376,8 +368,6 @@
 	                    this.state.error.code
 	                );
 	            }
-
-	            var versions = [{ value: 'v2.0.0-beta1', label: '/v2.0.0-beta1' }, { value: 'v2.0.0-beta2', label: '/v2.0.0-beta2' }, { value: 'v2.0.0-rc1', label: '/v2.0.0-rc1' }, { value: 'v2.0.0', label: '/v2.0.0' }, { value: 'v2.0.1', label: '/v2.0.1' }, { value: 'v2.0.2', label: '/v2.0.2' }, { value: 'v2.1.0', label: '/v2.1.0' }, { value: 'v2.1.1', label: '/v2.1.1' }, { value: 'v2.1.2', label: '/v2.1.2' }, { value: 'v2.2.0', label: '/v2.2.0' }, { value: 'v2.2.1', label: '/v2.2.1' }, { value: 'v2.2.2', label: '/v2.2.2' }, { value: 'v2.3.0', label: '/v2.3.0' }, { value: 'v2.3.1', label: '/v2.3.1' }, { value: 'v2.3.2', label: '/v2.3.2' }, { value: 'v2.3.3', label: '/v2.3.3' }, { value: 'v2.3.4', label: '/v2.3.4' }, { value: 'v5.0.0-alpha1', label: '/v5.0.0-alpha1' }, { value: 'v5.0.0-alpha2', label: '/v5.0.0-alpha2' }, { value: 'v5.0.0-alpha3', label: '/v5.0.0-alpha3' }, { value: 'v5.0.0-alpha4', label: '/v5.0.0-alpha4' }];
 
 	            return _react2.default.createElement(
 	                'div',
@@ -476,7 +466,11 @@
 
 	_reactDom2.default.render(_react2.default.createElement(
 	    _reactRouter.Router,
-	    { history: _reactRouter.browserHistory },
+	    {
+	        history: _reactRouter.browserHistory,
+	        onUpdate: function onUpdate() {
+	            if (_lodash2.default.isUndefined(window.ga)) return;window.ga('send', 'pageview', location.pathname + location.search);
+	        } },
 	    _react2.default.createElement(_reactRouter.Route, { path: '/:version', component: RootView }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/', component: RootView })
 	), document.getElementById('app'));

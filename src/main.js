@@ -6,6 +6,30 @@ import { browserHistory, Router, Route, Link } from 'react-router'
 import 'whatwg-fetch';
 import Select from 'react-select';
 
+var versions = [
+    { value: 'v2.0.0-beta1', label: '/v2.0.0-beta1' },
+    { value: 'v2.0.0-beta2', label: '/v2.0.0-beta2' },
+    { value: 'v2.0.0-rc1', label: '/v2.0.0-rc1' },
+    { value: 'v2.0.0', label: '/v2.0.0' },
+    { value: 'v2.0.1', label: '/v2.0.1' },
+    { value: 'v2.0.2', label: '/v2.0.2' },
+    { value: 'v2.1.0', label: '/v2.1.0' },
+    { value: 'v2.1.1', label: '/v2.1.1' },
+    { value: 'v2.1.2', label: '/v2.1.2' },
+    { value: 'v2.2.0', label: '/v2.2.0' },
+    { value: 'v2.2.1', label: '/v2.2.1' },
+    { value: 'v2.2.2', label: '/v2.2.2' },
+    { value: 'v2.3.0', label: '/v2.3.0' },
+    { value: 'v2.3.1', label: '/v2.3.1' },
+    { value: 'v2.3.2', label: '/v2.3.2' },
+    { value: 'v2.3.3', label: '/v2.3.3' },
+    { value: 'v2.3.4', label: '/v2.3.4' },
+    { value: 'v5.0.0-alpha1', label: '/v5.0.0-alpha1' },
+    { value: 'v5.0.0-alpha2', label: '/v5.0.0-alpha2' },
+    { value: 'v5.0.0-alpha3', label: '/v5.0.0-alpha3' },
+    { value: 'v5.0.0-alpha4', label: '/v5.0.0-alpha4' },
+];
+
 class Part extends React.Component {
     constructor(props){
         super(props);
@@ -101,33 +125,18 @@ class RootView extends React.Component {
         this.state = { docs:[], error: null, path: (this.props.location.pathname || ''), q: (this.props.location.query.q || '') };
 
     }
-    load() {
-        var $this=this;
-    }
     componentDidMount() {
         if (_.isUndefined(this.props.params.version)) {
             browserHistory.replace(_.assign(this.props.location, {pathname: "/v5.0.0-alpha4" }));
         } else {
-            this.setState({version: this.props.params.version});
-
-            var $this = this;
-            fetch("docs/" + this.props.params.version + ".json").then(function(response) {
-                if (response.status !== 200) {  
-                    $this.setState({error: { code: response.status }});
-                    return;  
-                }
-
-                response.json().then(function(data) {  
-                    $this.setState({docs: data});
-                });  
-            });
+            this.load(this.props.params.version);
         }
     }
-    componentWillReceiveProps(nextProps) {
-        this.setState({version: nextProps.params.version});
+    load(version) {
+        this.setState({version: version});
 
         var $this = this;
-        fetch("docs/" + nextProps.params.version + ".json").then(function(response) {
+        fetch("docs/" + version + ".json").then(function(response) {
             if (response.status !== 200) {  
                 $this.setState({error: { code: response.status }});
                 return;  
@@ -137,6 +146,11 @@ class RootView extends React.Component {
                 $this.setState({docs: data});
             });  
         });
+    }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.params.version !== nextProps.params.version) {
+            this.load(nextProps.params.version);
+        }
     }
     onVersionChange(v, event) {
         browserHistory.push(_.assign(this.props.location, {pathname: "/" + v.value }));
@@ -171,32 +185,6 @@ class RootView extends React.Component {
         if (this.state.error != null) {
             return <div>{this.state.error.code}</div>
         }
-
-        var versions = [
-        { value: 'v2.0.0-beta1', label: '/v2.0.0-beta1' },
-        { value: 'v2.0.0-beta2', label: '/v2.0.0-beta2' },
-        { value: 'v2.0.0-rc1', label: '/v2.0.0-rc1' },
-            { value: 'v2.0.0', label: '/v2.0.0' },
-            { value: 'v2.0.1', label: '/v2.0.1' },
-                { value: 'v2.0.2', label: '/v2.0.2' },
-                { value: 'v2.1.0', label: '/v2.1.0' },
-                    { value: 'v2.1.1', label: '/v2.1.1' },
-                    { value: 'v2.1.2', label: '/v2.1.2' },
-                        { value: 'v2.2.0', label: '/v2.2.0' },
-                        { value: 'v2.2.1', label: '/v2.2.1' },
-                            { value: 'v2.2.2', label: '/v2.2.2' },
-                            { value: 'v2.3.0', label: '/v2.3.0' },
-                                { value: 'v2.3.1', label: '/v2.3.1' },
-                                { value: 'v2.3.2', label: '/v2.3.2' },
-                                    { value: 'v2.3.3', label: '/v2.3.3' },
-                                    { value: 'v2.3.4', label: '/v2.3.4' },
-                                        { value: 'v5.0.0-alpha1', label: '/v5.0.0-alpha1' },
-                                        { value: 'v5.0.0-alpha2', label: '/v5.0.0-alpha2' },
-                                            { value: 'v5.0.0-alpha3', label: '/v5.0.0-alpha3' },
-                                            { value: 'v5.0.0-alpha4', label: '/v5.0.0-alpha4' },
-
-                                                ];
-
 
         return <div>
                 <div className="row">
@@ -242,7 +230,9 @@ class RootView extends React.Component {
 }
 
 ReactDOM.render((
-  <Router history={browserHistory}>
+  <Router 
+    history={browserHistory} 
+    onUpdate={() => { if (_.isUndefined(window.ga)) return; window.ga('send', 'pageview', location.pathname + location.search ); }}>
       <Route path='/:version' component={RootView} />
       <Route path='/' component={RootView} />
   </Router>
