@@ -1,1 +1,1 @@
-# elasticsearch-api.info
+# [elasticsearch-api.info](http://elasticsearch-api.info)
