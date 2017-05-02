@@ -138,9 +138,21 @@ class RootView extends React.Component {
     }
     componentDidMount() {
         if (_.isUndefined(this.props.params.version)) {
-            browserHistory.replace(_.assign(this.props.location, {pathname: "/v5.0.0-alpha4" }));
+            browserHistory.replace(_.assign(this.props.location, {pathname: "/v5.2.2" }));
         } else {
-            this.load(this.props.params.version);
+            this.setState({version: nextProps.params.version});
+
+            var $this = this;
+            fetch("docs/" + nextProps.params.version + ".json").then(function(response) {
+                if (response.status !== 200) {  
+                    $this.setState({error: { code: response.status }});
+                    return;  
+                }
+
+                response.json().then(function(data) {  
+                    $this.setState({docs: data});
+                });  
+            });
         }
     }
     load(version) {
