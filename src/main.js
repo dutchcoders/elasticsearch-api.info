@@ -28,6 +28,17 @@ var versions = [
     { value: 'v5.0.0-alpha2', label: '/v5.0.0-alpha2' },
     { value: 'v5.0.0-alpha3', label: '/v5.0.0-alpha3' },
     { value: 'v5.0.0-alpha4', label: '/v5.0.0-alpha4' },
+    { value: 'v5.0.0-alpha5', label: '/v5.0.0-alpha5' },
+    { value: 'v5.0.0-beta1', label: '/v5.0.0-beta1' },
+    { value: 'v5.0.0-rc1', label: '/v5.0.0-rc1' },
+    { value: 'v5.0.0', label: '/v5.0.0' },
+    { value: 'v5.0.1', label: '/v5.0.1' },
+    { value: 'v5.0.2', label: '/v5.0.2' },
+    { value: 'v5.1.1', label: '/v5.1.1' },
+    { value: 'v5.1.2', label: '/v5.1.2' },
+    { value: 'v5.2.0', label: '/v5.2.0' },
+    { value: 'v5.2.1', label: '/v5.2.1' },
+    { value: 'v5.2.2', label: '/v5.2.2' },
 ];
 
 class Part extends React.Component {
